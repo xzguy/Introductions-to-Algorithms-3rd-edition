@@ -132,4 +132,35 @@ arr = [3,1,2,4,5,4,9]
 print("Exercise 15.4-5:")
 MONO_INC_LCS_LENGTH(arr)
 
-# Exercise: 15.4-5
+# Exercise: 15.4-6
+import bisect
+# array B: B[i-1] contains the last value of
+# a longest monotonically increasing subsequence of length i.
+# array C: C[i-1] contains the monotonically increasing
+# subsequence of length i with smallest last element seen so far
+def MONO_INC_LCS_LENGTH_FASTER(arr: [int]) -> None:
+    n = len(arr)
+    B = [float('inf')] * n
+    C = [0] * n
+    L = 1
+    for i in range(n):
+        if arr[i] < B[0]:
+            B[0] = arr[i]
+            C[0] = [arr[i]]
+        else:
+            j = bisect.bisect_left(B, arr[i], lo=0, hi=i+1)
+
+            # only strictly increasing
+            if B[j] == arr[i]:
+                continue
+            
+            B[j] = arr[i]
+            C[j] = C[j-1].copy()
+            C[j].append(arr[i])
+            if j+1 > L:
+                L += 1
+    print(C[L-1])
+
+arr = [2,0,20,3,2,0,6,32,3]
+print("Exercise 15.4-6:")
+MONO_INC_LCS_LENGTH_FASTER(arr)
